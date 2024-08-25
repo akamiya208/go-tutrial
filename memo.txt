@@ -1,0 +1,77 @@
+21:20 開始
+21:26 https://docs.google.com/presentation/d/1RVx8oeIMAWxbB7ZP2IcgZXnbZokjCmTUca-AbIpORGk/edit#slide=id.g4f417182ce_0_80 を読み始める
+21:37 go 言語を devcontainer でやるためのとりあえず環境を整え始める
+22:36 devcontainer で go 言語の環境を整え終わった．（格闘）
+
+22:53 go mod init をとりあえず実行してみる
+go mod init github.com/akamiya208/go-tutrial
+go: creating new go.mod: module github.com/akamiya208/go-tutrial
+
+22:58 とりあえず go get で gin をインストールしてみる
+go get -u github.com/gin-gonic/gin
+
+23:00 とりあえず gin を起動してみる
+go run main.go
+
+# 返ってくる様になった
+curl http://localhost:8080/ping
+{"message":"pong"}
+
+23:03 CRUDアプリを作りたいので，GORMとmysql driverをインストールしてみる
+https://zenn.dev/ryoneko/articles/4c1267d7d0e0ca
+
+go get -u gorm.io/gorm
+go get -u gorm.io/driver/mysql
+
+
+23:34 migrate.goを作成し，gorm で migration してみる
+migrateできた
+
+mysql> desc users;
++------------+--------------+------+-----+---------+-------+
+| Field      | Type         | Null | Key | Default | Extra |
++------------+--------------+------+-----+---------+-------+
+| id         | varchar(191) | NO   | PRI | NULL    |       |
+| id         | varchar(191) | NO   | PRI | NULL    |       |
+| name       | longtext     | YES  |     | NULL    |       |
+| created_at | datetime(3)  | YES  |     | NULL    |       |
++------------+--------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select * from users;
++-------+-------+-------------------------+
+| id    | name  | created_at              |
++-------+-------+-------------------------+
+| user1 | user1 | 2024-08-25 14:37:15.164 |
+| user2 | user2 | 2024-08-25 14:37:15.179 |
+| user3 | user3 | 2024-08-25 14:37:15.188 |
++-------+-------+-------------------------+
+3 rows in set (0.00 sec)
+
+23:34 dbからgetOneエンドポイントを作成してみる
+$ curl http://localhost:8080/users/user1
+{"ID":"user1","Name":"user1","CreatedAt":"2024-08-25T14:37:15.164Z"}
+
+00:06 registerエンドポイントを作成してみる
+$ curl -X POST -H "Content-Type: application/json" -d '{"id": "user4", "name": "akamiya"}' localhost:8080/users
+{"ID":"user4","Name":"akamiya","CreatedAt":"2024-08-25T15:06:37.102Z"}
+
+$ curl http://localhost:8080/users/user4
+{"ID":"user4","Name":"akamiya","CreatedAt":"2024-08-25T15:06:37.102Z"}
+
+00:15 deleteエンドポイントを作成してみる
+$ curl -X DELETE http://localhost:8080/users/user3 -i
+HTTP/1.1 204 No Content
+Date: Sun, 25 Aug 2024 15:15:31 GMT
+
+$ curl http://localhost:8080/users/user3
+User not found
+
+00:24
+$curl -X PUT -H "Content-Type: application/json" -d '{"name": "updatedUser"}' localhost:8080/users/user1
+{"ID":"user1","Name":"updatedUser","CreatedAt":"2024-08-25T14:37:15.164Z"}
+
+$ curl http://localhost:8080/users/user1
+{"ID":"user1","Name":"updatedUser","CreatedAt":"2024-08-25T14:37:15.164Z"}
+
+00:29 おわり
