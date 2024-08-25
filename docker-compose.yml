@@ -1,0 +1,44 @@
+version: "3"
+
+services:
+  go: &go
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: go_tutrial
+    depends_on: # see: https://docs.docker.com/compose/startup-order/
+      mysql:
+        condition: service_healthy
+        restart: true
+    volumes:
+      - .:/app
+    tty: true
+    ports:
+      - "8080:8080"
+
+  mysql:
+    image: mysql:8.0.19
+    command: --default-authentication-plugin=mysql_native_password
+    volumes:
+      - go_tutrial_development_mysql_data:/var/lib/mysql
+    env_file:
+      - ./.envs/.mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p$MYSQL_ROOT_PASSWORD",
+        ]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+
+volumes:
+  go_tutrial_development_mysql_data:
