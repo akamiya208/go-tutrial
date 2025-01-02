@@ -1,0 +1,43 @@
+version: "3"
+
+tasks:
+  default:
+    desc: "Show available tasks"
+    cmds:
+      - task --list-all
+
+  init:
+    desc: "Initialize project"
+    cmds:
+      - go install github.com/air-verse/air@latest
+      - go install github.com/go-delve/delve/cmd/dlv@latest
+      - go install mvdan.cc/gofumpt@latest
+      - go install honnef.co/go/tools/cmd/staticcheck@latest
+      - go mod tidy
+
+  mysql:
+    desc: "connect mysql"
+    cmds:
+      - mysql -ulocal -hmysql -ppassword
+
+  format:
+    desc: "Format code"
+    cmds:
+      - gofumpt -l -w .
+
+  lint:
+    desc: "Lint code"
+    cmds:
+      - staticcheck ./...
+
+  run-dev:
+    desc: "Run the application for development mode"
+    cmds:
+      - air -c .air.toml
+    silent: true
+
+  run:
+    desc: "Run the application for production mode"
+    cmds:
+      - go run ./cmd/app/main.go
+    silent: true
