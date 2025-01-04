@@ -30,6 +30,11 @@ tasks:
     cmds:
       - staticcheck ./...
 
+  migrate:
+    desc: "Run database migration"
+    cmds:
+      - go run ./cmd/migrate/main.go
+
   run-dev:
     desc: "Run the application for development mode"
     cmds:

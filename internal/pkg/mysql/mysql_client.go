@@ -1,0 +1,52 @@
+package mysql
+
+import (
+	"github.com/akamiya208/go-tutrial/internal/pkg/models"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+)
+
+type Client struct {
+	db *gorm.DB
+}
+
+func NewMySQLClient() (*Client, error) {
+	dsn := "local:password@tcp(mysql:3306)/go_tutrial?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+	return &Client{db: db}, nil
+}
+
+func (c *Client) GetTask(ID uint) (models.Task, error) {
+	var task models.Task
+	if err := c.db.First(&task, ID).Error; err != nil {
+		return models.Task{}, err
+	}
+	return task, nil
+}
+
+func (c *Client) GetTasksByName(name string) ([]models.Task, error) {
+	var tasks []models.Task
+	if err := c.db.Where("name = ?", name).Find(&tasks).Error; err != nil {
+		return []models.Task{}, err
+	}
+	return tasks, nil
+}
+
+func (c *Client) CreateTask(task *models.Task) error {
+	return c.db.Create(&task).Error
+}
+
+func (c *Client) UpdateTask(task *models.Task) error {
+	return c.db.Save(&task).Error
+}
+
+func (c *Client) DeleteTask(task *models.Task) error {
+	return c.db.Delete(&task).Error
+}
+
+func (c *Client) DB() *gorm.DB {
+	return c.db
+}
