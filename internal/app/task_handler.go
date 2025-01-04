@@ -34,8 +34,7 @@ func (h *TaskHandler) HandleGetTask(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-
-	json.NewEncoder(w).Encode(dto.ToTaskResponse(task))
+	writeJSONResponse(w, http.StatusOK, dto.ToTaskResponse(task))
 }
 
 func (h *TaskHandler) HandleGetTasks(w http.ResponseWriter, r *http.Request) {
@@ -55,7 +54,7 @@ func (h *TaskHandler) HandleGetTasks(w http.ResponseWriter, r *http.Request) {
 	for i, task := range tasks {
 		responses[i] = dto.ToTaskResponse(task)
 	}
-	json.NewEncoder(w).Encode(responses)
+	writeJSONResponse(w, http.StatusOK, responses)
 }
 
 func (h *TaskHandler) HandleCreateTask(w http.ResponseWriter, r *http.Request) {
@@ -70,7 +69,7 @@ func (h *TaskHandler) HandleCreateTask(w http.ResponseWriter, r *http.Request) {
 		writeErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	json.NewEncoder(w).Encode(dto.ToTaskResponse(task))
+	writeJSONResponse(w, http.StatusCreated, dto.ToTaskResponse(task))
 }
 
 func (h *TaskHandler) HandleUpdateTask(w http.ResponseWriter, r *http.Request) {
@@ -102,7 +101,7 @@ func (h *TaskHandler) HandleUpdateTask(w http.ResponseWriter, r *http.Request) {
 		writeErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
-	json.NewEncoder(w).Encode(dto.ToTaskResponse(task))
+	writeJSONResponse(w, http.StatusOK, dto.ToTaskResponse(task))
 }
 
 func (h *TaskHandler) HandleDeleteTask(w http.ResponseWriter, r *http.Request) {
@@ -125,6 +124,8 @@ func (h *TaskHandler) HandleDeleteTask(w http.ResponseWriter, r *http.Request) {
 		writeErrorResponse(w, http.StatusInternalServerError, err.Error())
 		return
 	}
+
+	writeJSONResponse(w, http.StatusNoContent, nil)
 }
 
 func writeErrorResponse(w http.ResponseWriter, statusCode int, message string) {
@@ -133,4 +134,13 @@ func writeErrorResponse(w http.ResponseWriter, statusCode int, message string) {
 
 	response := dto.ErrorResponse{Status: http.StatusText(statusCode), Detail: message}
 	json.NewEncoder(w).Encode(response)
+}
+
+func writeJSONResponse(w http.ResponseWriter, statusCode int, data interface{}) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(statusCode)
+
+	if data != nil {
+		json.NewEncoder(w).Encode(data)
+	}
 }
