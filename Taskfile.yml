@@ -46,3 +46,8 @@ tasks:
     cmds:
       - go run ./cmd/app/main.go
     silent: true
+
+  test:
+    desc: "Run tests"
+    cmds:
+      - go test -v ./...
