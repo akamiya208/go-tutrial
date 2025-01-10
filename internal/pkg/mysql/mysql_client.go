@@ -6,11 +6,22 @@ import (
 	"gorm.io/gorm"
 )
 
+type IClient interface {
+	GetTask(ID uint) (models.Task, error)
+	GetTasksByName(name string) ([]models.Task, error)
+	CreateTask(task *models.Task) error
+	UpdateTask(task *models.Task) error
+	DeleteTask(task *models.Task) error
+	DB() *gorm.DB
+}
+
+var _ IClient = &Client{}
+
 type Client struct {
 	db *gorm.DB
 }
 
-func NewMySQLClient() (*Client, error) {
+func NewMySQLClient() (IClient, error) {
 	dsn := "local:password@tcp(mysql:3306)/go_tutrial?charset=utf8mb4&parseTime=True&loc=Local"
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {

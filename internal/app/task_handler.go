@@ -11,10 +11,10 @@ import (
 )
 
 type TaskHandler struct {
-	mysqlClient *mysql.Client
+	mysqlClient mysql.IClient
 }
 
-func NewTaskHandler(client *mysql.Client) *TaskHandler {
+func NewTaskHandler(client mysql.IClient) *TaskHandler {
 	return &TaskHandler{mysqlClient: client}
 }
 
