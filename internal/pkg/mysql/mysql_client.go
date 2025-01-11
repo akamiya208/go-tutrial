@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"github.com/akamiya208/go-tutrial/internal/pkg/models"
+	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -22,7 +23,14 @@ type Client struct {
 }
 
 func NewMySQLClient() (IClient, error) {
-	dsn := "local:password@tcp(mysql:3306)/go_tutrial?charset=utf8mb4&parseTime=True&loc=Local"
+	viper.SetConfigName("config")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath("./configs")
+	if err := viper.ReadInConfig(); err != nil {
+		panic(err.Error())
+	}
+
+	dsn := viper.GetString("mysql.dsn")
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
