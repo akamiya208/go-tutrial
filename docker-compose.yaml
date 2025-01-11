@@ -17,8 +17,13 @@ services:
     image: mysql:8
     volumes:
       - go_tutrial_mysql_data:/var/lib/mysql
-    env_file:
-      - .envs/.mysql
+    environment:
+      MYSQL_HOST: mysql
+      MYSQL_PORT: 3306
+      MYSQL_ROOT_PASSWORD: qoyCZ1ZgyqXpcZkomOCGWtzBFAeVXIZKGJ5MSwDwjF6awM5v9V9epDkSSDWb4qax
+      MYSQL_USER: local
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: go_tutrial
     healthcheck:
       test:
         [
