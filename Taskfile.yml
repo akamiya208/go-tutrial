@@ -52,3 +52,8 @@ tasks:
     desc: "Run tests"
     cmds:
       - go test -v ./...
+  
+  swag:
+    desc: "Generate swagger docs"
+    cmds:
+      - swag init --dir ./cmd/app/
