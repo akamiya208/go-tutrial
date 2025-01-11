@@ -13,6 +13,7 @@ tasks:
       - go install github.com/go-delve/delve/cmd/dlv@latest
       - go install mvdan.cc/gofumpt@latest
       - go install honnef.co/go/tools/cmd/staticcheck@latest
+      - go install github.com/swaggo/swag/cmd/swag@latest
       - go mod tidy
 
   mysql:
