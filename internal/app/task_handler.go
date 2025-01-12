@@ -18,6 +18,17 @@ func NewTaskHandler(client mysql.IClient) *TaskHandler {
 	return &TaskHandler{mysqlClient: client}
 }
 
+// @Summary		get a task
+// @Description	get task by taskId
+// @Tags			tasks
+// @Accept			json
+// @Produce		json
+// @Param			taskId	path		uint	true	"Task ID"
+// @Success		200		{object}	dto.TaskResponse
+// @Failure		400		{object}	dto.ErrorResponse
+// @Failure		404		{object}	dto.ErrorResponse
+// @Failure		500		{object}	dto.ErrorResponse
+// @Router			/api/v1/tasks/{taskId} [get]
 func (h *TaskHandler) HandleGetTask(w http.ResponseWriter, r *http.Request) {
 	taskID, err := strconv.Atoi(r.PathValue("taskId"))
 	if err != nil {
@@ -37,6 +48,17 @@ func (h *TaskHandler) HandleGetTask(w http.ResponseWriter, r *http.Request) {
 	writeJSONResponse(w, http.StatusOK, dto.ToTaskResponse(task))
 }
 
+// @Summary		list tasks
+// @Description	list tasks by task name
+// @Tags			tasks
+// @Accept			json
+// @Produce		json
+// @Param			name	query		string	true	"search by name"
+// @Success		200		{object}	[]dto.TaskResponse
+// @Failure		400		{object}	dto.ErrorResponse
+// @Failure		404		{object}	dto.ErrorResponse
+// @Failure		500		{object}	dto.ErrorResponse
+// @Router			/api/v1/tasks [get]
 func (h *TaskHandler) HandleGetTasks(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
 	if name == "" {
@@ -57,6 +79,17 @@ func (h *TaskHandler) HandleGetTasks(w http.ResponseWriter, r *http.Request) {
 	writeJSONResponse(w, http.StatusOK, responses)
 }
 
+// @Summary		create a task
+// @Description	create a task
+// @Tags			tasks
+// @Accept			json
+// @Produce		json
+// @Param			reqest	body		dto.TaskCreateRequest	true	"Create task"
+// @Success		201		{object}	dto.TaskResponse
+// @Failure		400		{object}	dto.ErrorResponse
+// @Failure		404		{object}	dto.ErrorResponse
+// @Failure		500		{object}	dto.ErrorResponse
+// @Router			/api/v1/tasks [post]
 func (h *TaskHandler) HandleCreateTask(w http.ResponseWriter, r *http.Request) {
 	var request dto.TaskCreateRequest
 	if err := json.NewDecoder(r.Body).Decode(&request); err != nil {
@@ -72,6 +105,18 @@ func (h *TaskHandler) HandleCreateTask(w http.ResponseWriter, r *http.Request) {
 	writeJSONResponse(w, http.StatusCreated, dto.ToTaskResponse(task))
 }
 
+// @Summary		update a task
+// @Description	update a task
+// @Tags			tasks
+// @Accept			json
+// @Produce		json
+// @Param			taskId	path		uint	true	"Task ID"
+// @Param			reqest	body		dto.TaskUpdateRequest	true	"Update task"
+// @Success		200		{object}	dto.TaskResponse
+// @Failure		400		{object}	dto.ErrorResponse
+// @Failure		404		{object}	dto.ErrorResponse
+// @Failure		500		{object}	dto.ErrorResponse
+// @Router			/api/v1/tasks/{taskId} [patch]
 func (h *TaskHandler) HandleUpdateTask(w http.ResponseWriter, r *http.Request) {
 	taskID, err := strconv.Atoi(r.PathValue("taskId"))
 	if err != nil {
@@ -104,6 +149,17 @@ func (h *TaskHandler) HandleUpdateTask(w http.ResponseWriter, r *http.Request) {
 	writeJSONResponse(w, http.StatusOK, dto.ToTaskResponse(task))
 }
 
+// @Summary		delete a task
+// @Description	delete a task by taskId
+// @Tags			tasks
+// @Accept			json
+// @Produce		json
+// @Param			taskId	path	uint	true	"Task ID"
+// @Success		204
+// @Failure		400	{object}	dto.ErrorResponse
+// @Failure		404	{object}	dto.ErrorResponse
+// @Failure		500	{object}	dto.ErrorResponse
+// @Router			/api/v1/tasks/{taskId} [delete]
 func (h *TaskHandler) HandleDeleteTask(w http.ResponseWriter, r *http.Request) {
 	taskID, err := strconv.Atoi(r.PathValue("taskId"))
 	if err != nil {

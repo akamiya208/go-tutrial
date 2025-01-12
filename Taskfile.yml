@@ -24,6 +24,7 @@ tasks:
   format:
     desc: "Format code"
     cmds:
+      - swag fmt --dir ./cmd/app,./internal/app,./internal/pkg/dto
       - gofumpt -l -w .
 
   lint:
@@ -56,4 +57,4 @@ tasks:
   swag:
     desc: "Generate swagger docs"
     cmds:
-      - swag init --dir ./cmd/app/
+      - swag init --outputTypes go --dir ./cmd/app,./internal/app,./internal/pkg/dto
