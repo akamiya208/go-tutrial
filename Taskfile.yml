@@ -57,4 +57,4 @@ tasks:
   swag:
     desc: "Generate swagger docs"
     cmds:
-      - swag init --outputTypes go --dir ./cmd/app,./internal/app,./internal/pkg/dto
+      - swag init --outputTypes go --dir ./cmd/app,./internal/handlers,./internal/pkg/dto

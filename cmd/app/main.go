@@ -6,7 +6,7 @@ import (
 	"os"
 
 	_ "github.com/akamiya208/go-tutrial/docs"
-	handlers "github.com/akamiya208/go-tutrial/internal/app"
+	handlers "github.com/akamiya208/go-tutrial/internal/handlers"
 	"github.com/akamiya208/go-tutrial/internal/pkg/mysql"
 	httpSwagger "github.com/swaggo/http-swagger" // http-swagger middleware
 )
